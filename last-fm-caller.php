@@ -19,8 +19,13 @@ class last_fm_call {
      */
     function __construct() {
         $this->date_list = new date_retriever;
-        $this->user = (!empty($_GET['user']) || $_GET['user'] != '') ? $_GET['user'] : 'lshpdttrsblck';
-        $this->start_date = (!empty($_GET['period']) || $_GET['period'] != '') ? $_GET['period'] : 1349611200;
+
+        if ( isset($_GET['user']) && $_GET['user'] != '') $this->user = $_GET['user'];
+        else $this->user = 'lshpdttrsblck';
+        
+        if ( isset($_GET['period']) ) $this->start_date = $_GET['period'];
+        else $this->start_date = 1349611200;
+
     }
     
     /*
@@ -90,7 +95,7 @@ class last_fm_call {
     
         $this_date = $this->get_date_index($index);
     
-        $cache_location = "cache/" . $this->user . "-" . $this->date_list->wlist[$this_date]['unix-time']['from'] . ".xml";
+        $cache_location = "cache/" . $this->user . "-" . $this->date_list->wlist[$index]['unix-time']['from'] . ".xml";
         
         if (file_exists($cache_location)) {
             $dom_doc = new DOMDocument;
@@ -141,9 +146,11 @@ class last_fm_call {
      */
     
     function get_date_index($start_date) {
-    
+        
+        $index = '';
+        
         //Assign $size in the first expression to save memory!
-        for ($i=0, $size=count($this->date_list->wlist); $i <= $size; $i++) {
+        for ($i=0, $size=count($this->date_list->wlist); $i < $size; $i++) {
             
             if ($this->date_list->wlist[$i]['unix-time']['from'] == $start_date)
                 $index = $i;

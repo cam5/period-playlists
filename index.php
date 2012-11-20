@@ -6,6 +6,10 @@ $lfm = new last_fm_call;
 $charts = array_reverse($lfm->date_list->wlist);
 $tracks = $lfm->sev_weeks($lfm->start_date, 4);
 
+if (isset($_GET['period']) && $_GET['period'] != '')
+    $period = $_GET['period'];
+else $period = '';
+
 ?>
 <html>
 <head>
@@ -28,7 +32,7 @@ $tracks = $lfm->sev_weeks($lfm->start_date, 4);
         
         <select name="period">
             <? foreach ($charts as $chart) : ?>
-                <option value="<? echo $chart['unix-time']['from']; ?>" <? echo ($_GET['period'] == $chart['unix-time']['from'] ? ' selected ' : ''); ?>><? echo $chart['real-time']; ?></option>
+                <option value="<? echo $chart['unix-time']['from']; ?>" <? echo ($period == $chart['unix-time']['from'] ? ' selected ' : ''); ?>><? echo $chart['real-time']; ?></option>
             <? endforeach; ?>
         </select>
         <br />
