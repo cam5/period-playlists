@@ -1,0 +1,45 @@
+body {margin:0;padding:0;}
+
+@font-face {
+  font-family: 'Montaga';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Montaga'), local('Montaga-Regular'), url(http://themes.googleusercontent.com/static/fonts/montaga/v1/itYf_2A0fndjIgNlGpd2jQLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Patua One';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Patua One'), local('PatuaOne-Regular'), url(http://themes.googleusercontent.com/static/fonts/patuaone/v3/yAXhog6uK3bd3OwBILv_SLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+#header {width: 100%; opacity:0.7; position:fixed; z-index:999; background: #f7f7f7; border-bottom:1px solid #eee;}
+#header h1 {margin: 10px auto; font: 25px Montaga; text-align:center;}
+
+#period-selector {position:absolute; top: 80px; left:5px; width: 175px; border:1px solid green; z-index:10; background:#fff;}
+#period-selector form {}
+
+#song-container {
+    background: #000 url('img/wild_oliva.png') repeat;
+    padding: 0 2%;
+    top: 50px;
+}
+
+.song {
+    width: 126px;
+    padding: 12px;
+    margin: 5px;
+    float: left;
+    border: 5px solid #f7f7f7;
+    background: #dedede;
+    text-align:center;
+}
+
+.song img {width:100%; border:1px solid #fff;}
+
+.song p {margin: 10px auto;}
+.song .song-name {font: 14px "Patua One";}
+.song .artist-name {font: 10px "Montaga";}
+.song .playcount {font: 8px "Consolas", monospaced; color: #999; visibility:hidden;}
+.song:hover .playcount {visibility:visible;}

@@ -1,0 +1,6 @@
+#Cache files
+cache/*
+.htaccess
+
+api_key_location.php
+date_cache.xml
