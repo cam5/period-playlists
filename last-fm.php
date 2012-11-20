@@ -1,8 +1,8 @@
 <?php
 
-include('api_key_location.php');
+include('date-retriever.php');
 
-class last_fm_call {
+class last_fm {
 
     public $user;       
     public $date_list;  //Will pull in a date_retriever object
@@ -23,9 +23,8 @@ class last_fm_call {
         if ( isset($_GET['user']) && $_GET['user'] != '') $this->user = $_GET['user'];
         else $this->user = 'lshpdttrsblck';
         
-        if ( isset($_GET['period']) ) $this->start_date = $_GET['period'];
+        if ( isset($_GET['period']) && $_GET['period'] != '') $this->start_date = $_GET['period'];
         else $this->start_date = 1349611200;
-
     }
     
     /*
@@ -48,7 +47,7 @@ class last_fm_call {
      *
      */
      
-     function sev_weeks($start_week, $weeks_to_ask_for) {
+     function sev_weeks($start_week, $weeks_to_ask_for=16) {
         
         $index = $this->get_date_index( $start_week );
         $big_array = array();
@@ -171,6 +170,7 @@ class last_fm_call {
     function build_array($dom_doc) {
         
         $track_els = $dom_doc->getElementsByTagName( "track" );
+        $tracks = array();
         
         $i=0;
         foreach( $track_els as $track ) {

@@ -1,10 +1,12 @@
 <?php
-include ('last-fm-caller.php'); include('date-retriever.php');
+include ('global.php'); include ('playlist.php');
 
-//Ask Last.fm for a week's info.
-$lfm = new last_fm_call;
-$charts = array_reverse($lfm->date_list->wlist);
-$tracks = $lfm->sev_weeks($lfm->start_date, 4);
+$playlist = new playlist;
+
+$dates = new date_retriever;
+$charts = array_reverse($dates->wlist);
+
+$tracks = $playlist->track_list;
 
 if (isset($_GET['period']) && $_GET['period'] != '')
     $period = $_GET['period'];
@@ -22,7 +24,7 @@ else $period = '';
 <body>
 
 <div id="header">
-    <h1><? echo $lfm->user; ?>'s top tracks</h1>
+    <h1><? echo $ppl_global->user; ?>'s top tracks</h1>
 </div>
 
 <div id="period-selector">
