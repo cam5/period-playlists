@@ -7,6 +7,7 @@ class last_fm {
     public $user;       
     public $date_list;  //Will pull in a date_retriever object
     public $start_date; //Standard start date.
+    public $api_key;
     
     /*
      *  __construct
@@ -24,7 +25,10 @@ class last_fm {
         else $this->user = 'lshpdttrsblck';
         
         if ( isset($_GET['period']) && $_GET['period'] != '') $this->start_date = $_GET['period'];
-        else $this->start_date = 1349611200;
+        else $this->start_date = 1341144000;
+        
+        include('api_key_location.php');
+        
     }
     
     /*
@@ -53,11 +57,18 @@ class last_fm {
         $big_array = array();
         
         for ($i=0; $weeks_to_ask_for > $i; $i++) {
+        
             $current_week = $this->get_week($index + $i);
-            
-            foreach ($current_week as $song)
-                $big_array[] = $song;
+        
+            foreach ($current_week as $key => $value) {
                 
+                if ( isset( $big_array[$key] ) ) {
+                    $big_array[$key]['playcount'] += $value['playcount'];
+                }
+                
+                else $big_array[$key] = $value;
+            }
+        
         }
         
         return $big_array;
@@ -91,9 +102,9 @@ class last_fm {
      *
      */
     function cache_or_not($index) {
-    
+        
         $this_date = $this->get_date_index($index);
-    
+        
         $cache_location = "cache/" . $this->user . "-" . $this->date_list->wlist[$index]['unix-time']['from'] . ".xml";
         
         if (file_exists($cache_location)) {
@@ -128,12 +139,9 @@ class last_fm {
      *
      */
     function get_url($index) {
-        
-        global $api_key;    //Necessary to access Last.fm's datastores.
-
         $tofrom = $this->getToFrom($index, TRUE); //Ask for querystring
         
-        return 'http://ws.audioscrobbler.com/2.0/?method=user.getweeklytrackchart&user=' . $this->user . $tofrom . "&api_key=" . $api_key;
+        return 'http://ws.audioscrobbler.com/2.0/?method=user.getweeklytrackchart&user=' . $this->user . $tofrom . "&api_key=" . $this->api_key;
     }
     
     /*
@@ -171,23 +179,27 @@ class last_fm {
         
         $track_els = $dom_doc->getElementsByTagName( "track" );
         $tracks = array();
-        
+     
         $i=0;
         foreach( $track_els as $track ) {
+        
+          $track_mbid = $track->getElementsByTagName( "mbid" );
+          $mbid = ($track_mbid->item(0)->nodeValue != '') ? $track_mbid->item(0)->nodeValue : 'no-mbid';
+          
           $track_name = $track->getElementsByTagName( "name" );
-          $tracks[$i]['song-name'] = $track_name->item(0)->nodeValue;
-          
           $track_artist = $track->getElementsByTagName( "artist" );
-          $tracks[$i]['artist-name'] = $track_artist->item(0)->nodeValue;
-          
-          $track_playcount = $track->getElementsByTagName( "playcount" );
-          $tracks[$i]['playcount'] = $track_playcount->item(0)->nodeValue;
-          
           $track_image = $track->getElementsByTagName( "image" );
-          $tracks[$i]['image'] = $track_image->item(2)->nodeValue;
+          $track_playcount = $track->getElementsByTagName( "playcount" );
           
-          $i++;
+          $tracks[$mbid]['playcount'] =+ $track_playcount->item(0)->nodeValue;
+          $tracks[$mbid]['song-name'] = $track_name->item(0)->nodeValue;
+          $tracks[$mbid]['artist-name'] = $track_artist->item(0)->nodeValue;
+          $tracks[$mbid]['image'] = $track_image->item(2)->nodeValue;
+     
         }
+        
+        unset($tracks['no-mbid']);
+        
         return $tracks;
     }
     

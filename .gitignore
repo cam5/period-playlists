@@ -1,6 +1,9 @@
 #Cache files
 cache/*
 .htaccess
+.DS_Store
+*/.DS_Store
+*/*/.DS_Store
 
 api_key_location.php
 date_cache.xml

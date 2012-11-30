@@ -6,7 +6,7 @@ $playlist = new playlist;
 $dates = new date_retriever;
 $charts = array_reverse($dates->wlist);
 
-$tracks = $playlist->track_list;
+$tracks = $playlist->track_list; arsort($tracks);
 
 if (isset($_GET['period']) && $_GET['period'] != '')
     $period = $_GET['period'];

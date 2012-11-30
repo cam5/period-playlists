@@ -9,7 +9,7 @@ class playlist {
     
     function __construct() {
         $last_fm = new last_fm;
-        $this->track_list = $last_fm->sev_weeks( $last_fm->start_date );
+        $this->track_list = $last_fm->sev_weeks( $last_fm->start_date);
     }
     
     function top_tracks($tracklist, $playcount_threshold=3) {
